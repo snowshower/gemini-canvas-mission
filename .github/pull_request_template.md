@@ -11,7 +11,7 @@
 - **Today_Tea**
 
 ### 배포 링크
-- https://gemini.google.com/share/e38a24152cd8
+- https://gemini.google.com/share/42ea0eae3ced
 
 ### 이 앱을 만든 이유
 - 어떤 문제/불편함을 해결하려고 했나요?

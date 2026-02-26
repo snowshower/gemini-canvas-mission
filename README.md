@@ -8,7 +8,7 @@ Gemini Canvas 미션 결과물을 관리하는 저장소입니다.
 - 앱별 요구사항, 배포 링크, 회고를 일관된 형식으로 남깁니다.
 
 ### 오늘의 차 추천
-- https://gemini.google.com/share/e38a24152cd8
+- https://gemini.google.com/share/42ea0eae3ced
 - 사용자가 몸 상태를 간단히 입력하면 효과가 있을 차를 추천해주는 앱입니다.
 - 차의 이미지와 설명과 함께 차의 효능을 제공합니다.
 - 피해야 할 차도 추가로 보여줍니다. 
