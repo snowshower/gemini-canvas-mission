@@ -40,6 +40,56 @@
             color: white;
             border-color: #4a6741;
         }
+
+        /* Tea Steeping Animation */
+        .tea-cup {
+            position: relative;
+            width: 80px;
+            height: 60px;
+            border: 4px solid #4a6741;
+            border-top: none;
+            border-radius: 0 0 40px 40px;
+            background: #fff;
+            overflow: hidden;
+        }
+        .tea-cup::after {
+            content: '';
+            position: absolute;
+            top: 10px;
+            right: -15px;
+            width: 20px;
+            height: 30px;
+            border: 4px solid #4a6741;
+            border-radius: 0 15px 15px 0;
+        }
+        .tea-liquid {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(to bottom, #d97706, #92400e);
+            transition: height 1s linear, opacity 1s linear;
+        }
+        .steam {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+        }
+        .steam-line {
+            width: 4px;
+            height: 15px;
+            background: rgba(74, 103, 65, 0.2);
+            border-radius: 2px;
+            animation: steam 2s infinite ease-in-out;
+        }
+        @keyframes steam {
+            0% { transform: translateY(0) scaleY(1); opacity: 0; }
+            50% { opacity: 0.5; }
+            100% { transform: translateY(-20px) scaleY(1.5); opacity: 0; }
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col items-center p-4 md:p-8">
@@ -178,17 +228,30 @@
                         </div>
                     </div>
 
-                    <!-- Timer Visualizer (Hidden by default) -->
-                    <div id="timerDisplay" class="hidden mb-6 bg-white p-4 rounded-xl shadow-inner border border-gray-100 flex flex-col items-center">
-                        <div class="text-3xl font-mono font-bold text-[#4a6741] mb-2" id="timeRemaining">03:00</div>
-                        <div class="w-full bg-gray-100 h-2 rounded-full overflow-hidden">
+                    <!-- Timer Visualizer -->
+                    <div id="timerDisplay" class="hidden mb-6 bg-white p-8 rounded-xl shadow-inner border border-gray-100 flex flex-col items-center">
+                        <!-- Steeping Visual -->
+                        <div class="relative mb-6">
+                            <div class="steam">
+                                <div class="steam-line" style="animation-delay: 0s"></div>
+                                <div class="steam-line" style="animation-delay: 0.5s"></div>
+                                <div class="steam-line" style="animation-delay: 0.2s"></div>
+                            </div>
+                            <div class="tea-cup">
+                                <div id="teaLiquid" class="tea-liquid" style="height: 0%; opacity: 0.2;"></div>
+                            </div>
+                        </div>
+
+                        <div class="text-4xl font-mono font-bold text-[#4a6741] mb-4" id="timeRemaining">03:00</div>
+                        <div class="w-full max-w-xs bg-gray-100 h-2 rounded-full overflow-hidden">
                             <div id="timerBar" class="bg-[#4a6741] h-full transition-all duration-1000" style="width: 100%"></div>
                         </div>
+                        <p class="text-xs text-gray-400 mt-4">향긋하게 차가 우려지는 중입니다...</p>
                     </div>
 
                     <div class="space-y-4">
                         <div class="flex gap-3">
-                            <i data-lucide="info" class="w-5 h-5 text-[#4a6741] shrink-0 mt-1"></i>
+                            <i data-lucide="leaf" class="w-5 h-5 text-[#4a6741] shrink-0 mt-1"></i>
                             <div>
                                 <h4 class="font-bold text-sm mb-1 text-gray-800">찻잎(Leaf)으로 우릴 때</h4>
                                 <p id="leafMethod" class="text-xs text-gray-600 leading-relaxed"></p>
@@ -406,8 +469,16 @@
         document.getElementById('timeRemaining').textContent =
             `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
 
-        const percentage = (currentSeconds / totalSeconds) * 100;
-        document.getElementById('timerBar').style.width = percentage + "%";
+        const progress = ((totalSeconds - currentSeconds) / totalSeconds);
+        const percentage = progress * 100;
+
+        // Update Bar
+        document.getElementById('timerBar').style.width = (100 - (progress * 100)) + "%";
+
+        // Update Tea Visual
+        const teaLiquid = document.getElementById('teaLiquid');
+        teaLiquid.style.height = percentage + "%";
+        teaLiquid.style.opacity = 0.2 + (progress * 0.8);
     }
 
     function resetTimer() {
@@ -417,6 +488,13 @@
         const btn = document.getElementById('timerBtn');
         if (btn) btn.innerHTML = `<i data-lucide="play" class="w-3 h-3"></i> 타이머 시작`;
         lucide.createIcons();
+
+        // Reset Visuals
+        const teaLiquid = document.getElementById('teaLiquid');
+        if (teaLiquid) {
+            teaLiquid.style.height = "0%";
+            teaLiquid.style.opacity = "0.2";
+        }
     }
 
     function resetUI() {
